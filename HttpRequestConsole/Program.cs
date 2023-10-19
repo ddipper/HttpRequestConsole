@@ -1,4 +1,6 @@
-﻿class Program
+﻿using System.Text.Json.Serialization;
+
+class Program
 {
     static HttpClient httpClient = new HttpClient();
 
@@ -8,8 +10,22 @@
 
         using HttpResponseMessage response = await httpClient.SendAsync(request);
 
-        await Console.Out.WriteLineAsync($"Status: {response.StatusCode}");
+        Console.WriteLine($"Status: {response.StatusCode}");
 
-        await httpClient.SendAsync(request);
+        Console.WriteLine("Headers");
+        foreach( var header in response.Headers)
+        {
+            Console.WriteLine($"{header.Key}");
+            foreach(var headerValue in header.Value)
+            {
+                Console.WriteLine(headerValue);
+            }
+        }
+
+        Console.WriteLine("\nContent");
+        string content = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(content);
+
+        //await httpClient.SendAsync(request);
     }
 }
